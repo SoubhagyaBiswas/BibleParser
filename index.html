@@ -2,38 +2,69 @@
 <html>
 <head>
 	<title></title>
+	<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
 	<style type="text/css">
+		body{
+			padding: 10px; 
+		}
+		input{
+			height: 35px;
+			border-radius: 4px;
+			border: 1px solid #aaa;
+			padding: 0px 4px;
+		}
 		.mb-16{
 			margin-bottom: 12px;
 		}
+		.btn{
+			font-weight: bold;
+		}
 		.chapter-container{
-			padding: 10px;border: 1px solid black;
+			box-shadow: 0px 2px 5px 0px rgba(100,100,100, 0.2);
+			border-radius: 5px;
+			padding: 10px;
 		}
 		.textarea{
 			padding: 4px;
 			width: calc(100% - 8px);
-
-			height: 100px;
 		}
-		.subtitle-container{
-			
+
+		.textarea-container{
+			min-height: 175px;
+		}
+		.subtitleParent{
+				margin-left: 5px;
+				padding-top: 0px;
+				padding-left: 10px;
+				padding-bottom: 0px;
+				border-left: 3px solid #f79533;
 		}
 	</style>
 </head>
 <body>
-	<div>
-		<input type="text" id="languageCode" placeholder="Language Code">
-		<input type="text" id="storyCode" placeholder="Story Code">
-		<input type="text" id="storyShortName" placeholder="Story Short Name">
-		<input type="text" id="storyLongName" placeholder="Story Long Name">
+	<div class="mb-16 chapter-container py-3">
+		<div class="mb-2"><b>Story Details</b></div>
+		<div class="row mx-0 px-0">
+			<div class="col-4 px-0 pr-2">
+				<input class="w-100" type="text" id="storyCode" placeholder="Story Code">
+			</div>
+			<div class="col-4 px-1">
+				<input class="w-100" type="text" id="storyShortName" placeholder="Story Short Name">
+			</div>
+			<div class="col-4 px-0 pl-2">
+				<input class="w-100" type="text" id="storyLongName" placeholder="Story Long Name">
+			</div>
+		</div>
 	</div>
 <div>
 	<div id="chapterParent">
 	
 	</div>
 
-	<button onclick="getData()">Save Content</button>
-	<button onclick="addChapter()">Add Chapter</button>
+	<center>
+		<button class="btn btn-warning" onclick="addChapter()">Add Chapter</button>
+		<button class="btn btn-success" onclick="getData()">Save Content</button>
+	</center>
 </div>
 
 
@@ -46,18 +77,21 @@
 		chapterContainer.classList = "mb-16 chapter-container"
 		chapter += 1;
 		chapterContainer.innerHTML = `
-			<div class="mb-16">Chapter Number : <span>${chapter}</span></div>
+			<div class="mb-16"><b>Chapter Number : <span>${chapter}</span></b></div>
 				<div class="subtitleParent">
-					<div class="mb-16 subtitle-container">
-						<input type="text" class="mb-16 subtitleTitle" placeholder="Subtitle Title">	
-						<input type="text" class="mb-16 subtitleReference" placeholder="Subtitle Reference">
-						
-						<div>
-							<textarea class="textarea"></textarea>	
+					<div class="mb-4 subtitle-container row mx-0 px-0">
+						<div class="col-6 mb-16 px-0 pr-2">
+							<input type="text" class="w-100 subtitleTitle" placeholder="Subtitle Title">	
+						</div>
+						<div class="col-6 mb-16 px-0 pl-2">
+								<input type="text" class="w-100 subtitleReference" placeholder="Subtitle Reference">
+						</div>
+						<div class="col-12 px-0 mx-0 textarea-container">
+							<textarea placeholder="For e.g ...\n1 The family history of Jesus the Messiah, a descendant of David who was a descendant of Abraham.\n\n2 Abraham was the father of Isaac. Isaac was the father of Jacob.Jacob was the father of Judah and his brothers." class="w-100 h-100 textarea"></textarea>
 						</div>
 					</div>		
 				</div>
-				<button onclick="addSubtitle(${chapter})">Add Subtitle</button>
+				<button class="btn btn-primary" onclick="addSubtitle(${chapter})">Add Subtitle</button>
 			</div>
 		`;
 		document.getElementById("chapterParent").appendChild(chapterContainer);
@@ -66,8 +100,6 @@
 	function getData(){
 		var finalList = [];
 		chapters = document.getElementsByClassName("chapter-container")
-		console.log(document.getElementById("languageCode").value)
-		console.log(chapters);
 		for(var i = 0; i < chapters.length; i++){
 			chapter = chapters[i];
 			subtitles = chapter.getElementsByClassName("subtitle-container");
@@ -91,7 +123,6 @@
 				data['subtitle'] = subtitle;
 				data['verses'] = verses;
 				finalList.push(data);
-//				console.log(data);
 			}
 		}
 		appendSubtitle(finalList);
@@ -99,15 +130,18 @@
 
 	function addSubtitle(chapterNumber) {
 		var subtitleContainer = document.createElement("div");
-		subtitleContainer.classList = "mb-16 subtitle-container"
+		subtitleContainer.classList = "mb-4 subtitle-container row mx-0 px-0"
 
 		subtitleContainer.innerHTML = `
-			<input type="text" class="mb-16 subtitleTitle" placeholder="Subtitle Title">	
-			<input type="text" class="mb-16 subtitleReference" placeholder="Subtitle Reference">
-						
-			<div>
-				<textarea class="textarea"></textarea>	
-			</div>
+			<div class="col-6 mb-16 px-0 pr-2">
+							<input type="text" class="w-100 subtitleTitle" placeholder="Subtitle Title">	
+						</div>
+						<div class="col-6 mb-16 px-0 pl-2">
+								<input type="text" class="w-100 subtitleReference" placeholder="Subtitle Reference">
+						</div>
+						<div class="col-12 px-0 mx-0 textarea-container">
+							<textarea placeholder="For e.g ...\n1 The family history of Jesus the Messiah, a descendant of David who was a descendant of Abraham.\n\n2 Abraham was the father of Isaac. Isaac was the father of Jacob.Jacob was the father of Judah and his brothers." class="w-100 h-100 textarea"></textarea>	
+						</div>
 		`;
 		console.log(chapterNumber);
 		document.getElementsByClassName("subtitleParent")[chapterNumber - 1].appendChild(subtitleContainer);
@@ -172,8 +206,6 @@
 	container.appendChild(storyName)
 
 	container.appendChild(parent)
-
-	//a.getElementsByTagName('body')[0].innerHTML = ""
 	
 	var body = document.createElement("body")
 
@@ -183,22 +215,21 @@
 	html.appendChild(body)
 
 	save(html);
-	console.log(html);
 }
 
 function save(html) {
-  var htmlContent = html;
-  var bl = new Blob([htmlContent.outerHTML], {type: "text/html;charset=utf-8"});
-  //var bl = new Blob([htmlContent.outerHTML], {type: "application/gml+xml"});
-  var a = document.createElement("a");
-  a.href = URL.createObjectURL(bl);
-  a.download = `NEW ${document.getElementById("storyShortName").value} - ${document.getElementById("storyCode").value}.html`;
-  a.hidden = true;
-  document.body.appendChild(a);
-  a.innerHTML = "something random - nobody will see this, it doesn't matter what you put here";
-  a.click();
+	var htmlContent = html;
+	var bl = new Blob([htmlContent.outerHTML], {type: "text/html;charset=utf-8"});
+	var a = document.createElement("a");
+	a.href = URL.createObjectURL(bl);
+	a.download = `NEW ${document.getElementById("storyShortName").value} - ${document.getElementById("storyCode").value}.html`;
+	a.hidden = true;
+	document.body.appendChild(a);
+	a.innerHTML = "something random - nobody will see this, it doesn't matter what you put here";
+	a.click();
 }
 
+addChapter()
 
 </script>
 
