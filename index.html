@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		.mb-16{
+			margin-bottom: 12px;
+		}
+		.chapter-container{
+			padding: 10px;border: 1px solid black;
+		}
+		.textarea{
+			padding: 4px;
+			width: calc(100% - 8px);
+
+			height: 100px;
+		}
+		.subtitle-container{
+			
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<input type="text" id="languageCode" placeholder="Language Code">
+		<input type="text" id="storyCode" placeholder="Story Code">
+		<input type="text" id="storyShortName" placeholder="Story Short Name">
+		<input type="text" id="storyLongName" placeholder="Story Long Name">
+	</div>
+<div>
+	<div id="chapterParent">
+	
+	</div>
+
+	<button onclick="getData()">Save Content</button>
+	<button onclick="addChapter()">Add Chapter</button>
+</div>
+
+
+<script type="text/javascript">
+
+	var chapter = 0
+
+	function addChapter(){
+		var chapterContainer = document.createElement("div")
+		chapterContainer.classList = "mb-16 chapter-container"
+		chapter += 1;
+		chapterContainer.innerHTML = `
+			<div class="mb-16">Chapter Number : <span>${chapter}</span></div>
+				<div class="subtitleParent">
+					<div class="mb-16 subtitle-container">
+						<input type="text" class="mb-16 subtitleTitle" placeholder="Subtitle Title">	
+						<input type="text" class="mb-16 subtitleReference" placeholder="Subtitle Reference">
+						
+						<div>
+							<textarea class="textarea"></textarea>	
+						</div>
+					</div>		
+				</div>
+				<button onclick="addSubtitle(${chapter})">Add Subtitle</button>
+			</div>
+		`;
+		document.getElementById("chapterParent").appendChild(chapterContainer);
+	}
+
+	function getData(){
+		var finalList = [];
+		chapters = document.getElementsByClassName("chapter-container")
+		console.log(document.getElementById("languageCode").value)
+		console.log(chapters);
+		for(var i = 0; i < chapters.length; i++){
+			chapter = chapters[i];
+			subtitles = chapter.getElementsByClassName("subtitle-container");
+			
+			for(var j = 0; j < subtitles.length; j++){
+				var data = {}
+				subtitle = subtitles[j];
+				var title = subtitle.getElementsByClassName("subtitleTitle")[0].value;
+				var reference = subtitle.getElementsByClassName("subtitleReference")[0].value;
+				var verses = subtitle.getElementsByClassName("textarea")[0].value.split("\n\n");
+				var subtitle = ""
+				if(title == "" && reference == ""){
+					text = "&nbsp;"
+				}else if(reference != ""){
+					subtitle = "# " + title + " ## " + reference
+				} else{
+					subtitle = "# " + title
+				}
+
+				data['chapter_number'] = i+1;
+				data['subtitle'] = subtitle;
+				data['verses'] = verses;
+				finalList.push(data);
+//				console.log(data);
+			}
+		}
+		appendSubtitle(finalList);
+	}
+
+	function addSubtitle(chapterNumber) {
+		var subtitleContainer = document.createElement("div");
+		subtitleContainer.classList = "mb-16 subtitle-container"
+
+		subtitleContainer.innerHTML = `
+			<input type="text" class="mb-16 subtitleTitle" placeholder="Subtitle Title">	
+			<input type="text" class="mb-16 subtitleReference" placeholder="Subtitle Reference">
+						
+			<div>
+				<textarea class="textarea"></textarea>	
+			</div>
+		`;
+		console.log(chapterNumber);
+		document.getElementsByClassName("subtitleParent")[chapterNumber - 1].appendChild(subtitleContainer);
+	}
+
+
+	function appendSubtitle(finalList){
+
+	var parent = document.createElement("div")
+	parent.classList = "subtitle"
+
+	for(var i = 0; i < finalList.length; i++){
+		var chapterNumber = finalList[i].chapter_number
+		var subtitle = finalList[i].subtitle
+		var verses = finalList[i].verses
+
+		var parentP = document.createElement("p")
+		parentP.classList = "s"
+
+		var chapterDiv = document.createElement("div")
+		chapterDiv.classList = "chapter"
+
+		var chapterNoP = document.createElement("p")
+		chapterNoP.innerHTML = chapterNumber
+
+		var subtitleSpan = document.createElement("span")
+		subtitleSpan.innerHTML = subtitle
+
+		chapterDiv.appendChild(chapterNoP)
+		chapterDiv.appendChild(subtitleSpan)
+
+		for(var j = 0; j < verses.length; j++){
+			var span = document.createElement("span")
+			span.innerHTML = verses[j]
+			chapterDiv.appendChild(span)
+		}
+
+		parentP.appendChild(chapterDiv)
+		parent.appendChild(parentP)
+	}
+
+	var container = document.createElement("div")
+	container.id = "_idContainer000"
+	container.classList = "_idGenObjectStyleOverride-1"
+	
+	var contentId = document.createElement("div")
+	contentId.classList = "content_id"
+	contentId.innerText = document.getElementById("storyCode").value
+
+	container.appendChild(contentId)
+
+	var shortName = document.createElement("p")
+	shortName.classList = "tagHeaderDefinition"
+	shortName.innerText = document.getElementById("storyShortName").value
+
+	container.appendChild(shortName)
+
+	var storyName = document.createElement("p")
+	storyName.className = "mt1"
+	storyName.innerHTML = document.getElementById("storyLongName").value
+
+	container.appendChild(storyName)
+
+	container.appendChild(parent)
+
+	//a.getElementsByTagName('body')[0].innerHTML = ""
+	
+	var body = document.createElement("body")
+
+	body.appendChild(container)
+
+	var html = document.createElement("html")
+	html.appendChild(body)
+
+	save(html);
+	console.log(html);
+}
+
+function save(html) {
+  var htmlContent = html;
+  var bl = new Blob([htmlContent.outerHTML], {type: "text/html;charset=utf-8"});
+  //var bl = new Blob([htmlContent.outerHTML], {type: "application/gml+xml"});
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(bl);
+  a.download = `NEW ${document.getElementById("storyShortName").value} - ${document.getElementById("storyCode").value}.html`;
+  a.hidden = true;
+  document.body.appendChild(a);
+  a.innerHTML = "something random - nobody will see this, it doesn't matter what you put here";
+  a.click();
+}
+
+
+</script>
+
+</body>
+</html>
