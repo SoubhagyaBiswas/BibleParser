@@ -119,7 +119,7 @@
 					subtitle = "# " + title
 				}
 
-				data['chapter_number'] = i+1;
+				data['chapter_number'] = i;
 				data['subtitle'] = subtitle;
 				data['verses'] = verses;
 				finalList.push(data);
@@ -134,13 +134,13 @@
 
 		subtitleContainer.innerHTML = `
 			<div class="col-6 mb-16 px-0 pr-2">
-							<input type="text" class="w-100 subtitleTitle" placeholder="Subtitle Title">	
-						</div>
-						<div class="col-6 mb-16 px-0 pl-2">
-								<input type="text" class="w-100 subtitleReference" placeholder="Subtitle Reference">
-						</div>
-						<div class="col-12 px-0 mx-0 textarea-container">
-							<textarea placeholder="For e.g ...\n1 The family history of Jesus the Messiah, a descendant of David who was a descendant of Abraham.\n\n2 Abraham was the father of Isaac. Isaac was the father of Jacob.Jacob was the father of Judah and his brothers." class="w-100 h-100 textarea"></textarea>	
+				<input type="text" class="w-100 subtitleTitle" placeholder="Subtitle Title">	
+			</div>
+			<div class="col-6 mb-16 px-0 pl-2">
+				<input type="text" class="w-100 subtitleReference" placeholder="Subtitle Reference">
+			</div>
+			<div class="col-12 px-0 mx-0 textarea-container">
+				<textarea placeholder="For e.g ...\n1 The family history of Jesus the Messiah, a descendant of David who was a descendant of Abraham.\n\n2 Abraham was the father of Isaac. Isaac was the father of Jacob.Jacob was the father of Judah and his brothers." class="w-100 h-100 textarea"></textarea>	
 						</div>
 		`;
 		console.log(chapterNumber);
